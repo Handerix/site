@@ -1,0 +1,150 @@
+
+
+
+
+
+.courseRow {
+    padding: 0;
+    width: auto;
+    margin: 0.5em 0.5em 1em 0.5em;
+    height: inherit;
+    text-align: start;
+}
+
+
+.courseRow::after {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
+}
+
+
+.courseLeft {
+    width: 100%;
+    margin: 0.1em 0 0.1em 0;
+    padding: 1px;
+}
+
+.courseMiddle {
+    width: 100%;
+    margin: 0.1em 0 0.1em 0;
+    padding: 1px;
+}
+
+.courseRight {
+    width: 100%;
+    margin: 0.1em 0 0.1em 0;
+    padding: 1px;
+}
+
+
+@media screen and (min-width: 450px)
+{
+    .courseRight {
+        float: right;
+        width: 33.339%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .courseMiddle {
+        float: left;
+        width: 33.33%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .courseLeft {
+        width: 33.33%;
+        float: left;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        margin: 0 0.4em;
+        text-align: left;
+    }
+
+    .content {
+        text-align: start;
+    }
+}
+
+
+
+
+.courseRow h2 {
+    font-family: "Rockwell",serif;
+    font-size: large;
+    font-weight: 300;
+    text-shadow: 2px 1px 1px #ff2800;
+    color: #fcf49c;
+    border: 3px solid #090907;
+    border-top: 2px solid #636047;
+    border-bottom: 2px solid #100f24;
+    background-color: #1c062b;
+    margin: 0;
+    padding: 0.2em 0.5em 0.2em 0.5em;
+    width: auto;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+.courseRow p {
+    margin: auto;
+    padding: 0.3em 0.5em 0.3em 0.5em;
+    font-family: "Calibri", sans-serif;
+    font-size: smaller;
+    color: #100207;
+    text-align: justify;
+    background-color: #8698a2;
+    border: 2px solid #100f24;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.courseRow h5 {
+    padding: 0.2em 0.5em 0.2em 0.5em;
+    color: #07070b;
+    font-size: smaller;
+    border: 2px solid #100f24;
+    background-color: #769a9e;
+}
+
+.courseHeader {
+    margin: 0;
+}
+
+.colCategory {
+    margin: 0;
+    border: 2px solid #100f24;
+}
+
+.semesterHeader {
+    font-family: "Rockwell",serif;
+    font-size: x-large;
+    font-weight: 300;
+    text-shadow: 1px 1px 1px #041a01;
+    text-align: center;
+    color: #a09700;
+    border: 4px double #7b721a;
+    border-bottom: 6px double #626500;
+    background-color: #631a15;
+    margin: 0.8em auto 0.8em auto;
+    padding: 0.1em 0.15em 0.1em 0.15em;
+    max-width: 45%;
+    border-radius: 3px;
+}
+
+
+
+
+.semester {
+    background-color: #bfb0ae;
+    border: 2px solid #737f88;
+    margin: 2em 0.8em 1em 0.8em;
+    padding: 0.1em 0.5em 0.3em 0.5em;
+    border-radius: 12px;
+}

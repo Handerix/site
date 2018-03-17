@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Menu</title>
+    <meta name="description" content=" Moje przygody z edukacją: Strona Główna ">
+    <meta name="author" content=" Robert Gawlik">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="BasicStyleSheet.css">
+    <style>
+        .tabHeader {
+            font-family: "Arial",sans-serif;
+            font-size: x-large;
+            font-weight: 100;
+            text-shadow: 1px 1px 1px #292700;
+            color: #150e2b;
+            padding: 1px 3px 1px 8px;
+            border-left: double;
+            border-color: #604040;
+            text-align: left;
+        }
+
+        #about_me {
+            font-family: "Tahoma",sans-serif;
+            padding: 0.3em;
+            color: #121210;
+        }
+
+        li {
+            font-family: "Futura",sans-serif;
+            color: #121210;
+            padding: 0.1em;
+        }
+
+        li > a {
+            font-family: "Futura",sans-serif;
+            color: #121210;
+            padding: 0.1em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <article id="window">
+        <header>
+            <h1><a class="topTitle" href="main.html">Robert Gawlik</a></h1>
+            <h2 class="topSubtitle">Przygody z edukacją</h2>
+            <h3 class="topContentTitle">Strona Główna</h3>
+        </header>
+        <section class="content">
+            <section id="descSection">
+                <h3 class="tabHeader">O mnie </h3>
+                <p id="about_me">
+                    <span>
+                        <img id="face" src="twarz.png" alt="face photo">
+                    </span>
+                    Urodziłem się w Zielonej Górze, w roku 1996. Szkoły do których chodziłem to kolejno: Szkoła Podstawowa Nr 10,
+                    Gimnazjum Nr 6 i Liceum Ogólnokrztałcące Nr 3. Od 2015 roku jestem studentem Informatyki na Politechnice Wrocławskiej
+                    na Wydziale Podstawowych Problemów Techniki. Z powodzeniem zdobywam wiedzę na 6 semestrze.
+                </p>
+            </section>
+            <section id="menu">
+                <div class="row">
+                    <div class="colLeft">
+                        <h2 class="tabHeader">Nauka</h2>
+                        <ul>
+                            <li><a href="rok_pierwszy.html">Studia: rok pierwszy</a></li>
+                            <li><a href="rok_drugi.html">Studia: rok drugi</a></li>
+                            <li><a href="rok_trzeci.html">Studia: rok trzeci</a></li>
+                        </ul>
+                    </div>
+                    <div class="colRight">
+                        <h2 class="tabHeader">Hobby</h2>
+                        <ul>
+                            <li><a href="ksiazki.html">Książki informatyczne</a></li>
+                            <li><a href="algorytmika.html">Zagadnienia algorytmiczne</a></li>
+                            <li>Piłka nożna, siatkówka</li>
+                            <li>Książki A. Sapkowskiego</li>
+                        </ul>
+                    </div>
+                </div> <!-- row -->
+            </section>
+        </section>
+    </article>
+</div>
+</body>
+</html>

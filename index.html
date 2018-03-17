@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>My Card</title>
+    <meta name="description" content=" Wizytówka ">
+    <meta name="author" content=" Robert Gawlik">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+
+        * {
+            margin: 0 auto;
+            border-width: 1pc;
+            border: dotted;
+            border-color: brown;
+            text-align: center;
+        }
+
+        body{
+            background-color:rgb(20,15,15);
+        }
+
+        .card {
+            min-width: 9em;
+            width: 28%;
+            padding: 1em;
+            display: block;
+            margin: 0 auto;
+            background-color: #707070;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+            border-radius: 12px;
+            border-bottom-right-radius: 28px;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            border-radius: 13px 13px 5px 5px;
+        }
+
+        .card:hover {
+            margin: 0 auto;
+            padding: 1em;
+            box-shadow: 0 5px 11px 0 rgba(247,250,247,0.5);
+            background-color: #6081a3;
+        }
+
+        .container {
+            margin: 1em auto 1em auto;
+            padding: 0.5em 0.2em 0.5em 0.2em;
+            background-color: rgba(195, 205, 230, 0.9);
+            border-radius: 10px;
+            border-width: 1pc;
+            border: dotted;
+            border-color: brown;
+            box-shadow: 0 0 0.5em 0.5em rgba(35,35,45,0.8);
+        }
+
+        .container * {
+            margin: 0.1em auto 0.1em auto;
+            padding: 1px 1px 1px 1px;
+            color: #102025;
+            text-shadow: azure;
+            font-family: Arial,sans-serif;
+            min-font-size: medium;
+        }
+
+        #title {
+            margin: 0 auto 1px auto;
+            color: #051040;
+            font-family: Century,serif;
+        }
+
+        #names {
+            color: #051040;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2 id="title"><b>My Card</b></h2>
+        <img src="wilk.png" alt="Avatar">
+        <div class="container">
+            <h3 id="names"><b>Robert Gawlik</b></h3>
+            <p>Student</p>
+            <p>IT science, WPPT</p>
+            <p>Politechnika Wrocławska</p>
+            <p><a href="">Contact</a></p>
+        </div>
+    </div>
+
+</body>
+</html>
