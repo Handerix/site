@@ -31,18 +31,45 @@
             background-color: #dcd1bd;
             border: 3px double #bfa292;
         }
+		
+		.bookHeader .tooltiptext {
+			visibility: hidden;
+			width: 4em;
+			background-color: #210308;
+			color: #fff;
+			text-align: center;
+			border-radius: 6px;
+            border: 2px solid #748b10;
+            padding: 4px;
+
+			position: absolute;
+			z-index: 1;
+		}
+		
+		.bookHeader:hover .tooltiptext {
+			visibility: visible;
+		}
+
+
     </style>
 </head>
 <body>
 <div class="container">
     <article id="window">
         <header>
-            <h1><a class="topTitle" href="main.html">Robert Gawlik</a></h1>
+            <h1><a class="topTitle" href="index.html">Robert Gawlik</a></h1>
             <h2 class="topSubtitle">Przygody z edukacją</h2>
             <h3 class="topContentTitle">Książki Informatyczne</h3>
         </header>
+        <nav>
+            <ul class="menu-h">
+                <li><a href="index.html">Strona Główna</a></li>
+                <li id="array">&#8658;</li>
+                <li id="location">Książki</li>
+            </ul>
+        </nav>
         <section class="content">
-            <h2 class="bookHeader">Bjarne Stroustrup, Język C++: Kompendium</h2>
+            <h2 class="bookHeader">Bjarne Stroustrup, Język C++: Kompendium <span class="tooltiptext"><a href="https://helion.pl/ksiazki/jezyk-c-kompendium-wiedzy-wydanie-iv-bjarne-stroustrup,jcppkw.htm#format/d">LINK</a></span></h2>
             <p class="bookParagraph">
                 Na ten moment najważniejsza i ulubiona książka programistyczna. Opisująca dokładnie powstałe od 2011 roku coś,
                 co możemy nazwać 'nowoczesnym C++'. Opisuje w bardzo dokładny sposób różne właściwości tego trudnego języka,
@@ -52,14 +79,14 @@
                 w szczególności, że jeśli w odpowiedni sposób napisze się szablony klas, to można przykryć kod niższego poziomu,
                 jednocześnie utrzymując zalety programowania obiektowego i utrzymując bezpieczeństwo poprzez silne typowanie.
             </p>
-            <h2 class="bookHeader">J. Liberty, S. Rao, B.L. Jones, C++ dla każdego</h2>
+            <h2 class="bookHeader">J. Liberty, S. Rao, B.L. Jones, C++ dla każdego<span class="tooltiptext"><a href="https://helion.pl/ksiazki/c-dla-kazdego-wydanie-ii-jesse-liberty-siddhartha-rao-bradley-l-jones,cppint.htm#format/d">LINK</a></span></h2>
             <p class="bookParagraph">
                 Tą książką zacząłem rzeczywistą naukę programowania. Wcześniej jedynie uczyłem się m.in. z kursów języka C dostępnych
                 w internecie, nie mając szerzej opisanych styli i własności języków C-podobnych. Choć jest to książka opisująca w bardzo
                 ograniczony sposób paradygmaty obiektowy i przede wszystkim strukturalny języka C++, to nauczyłem się poprzez nią
                 korzystania z podstawowych narzędzi C i rozróżnienia pomiędzy oboma językami.
             </p>
-            <h2 class="bookHeader">N.M. Josutti, C++, Biblioteka Standardowa</h2>
+            <h2 class="bookHeader">N.M. Josutti, C++, Biblioteka Standardowa<span class="tooltiptext"><a href="https://helion.pl/ksiazki/c-biblioteka-standardowa-podrecznik-programisty-wydanie-ii-nicolai-m-josuttis,cpbsp2.htm#format/e">LINK</a></span></h2>
             <p class="bookParagraph">
                 Książka, którą szerzej czytywałem ostatnimi czasy opisuje w sposób szeroki samą bibliotekę standardową C++. Opisane są tam
                 zarówno wszystkie kontenery, iteratory, jak i algorytmy, czyli narzędzia najczęściej wykorzystywane z całej biblioteki.
@@ -69,7 +96,7 @@
                 dodane ogromne moduły i wielka ilość ulepszeń do biblioteki standardowej. Najlepszym przykładem jest określanie typu
                 zwracania funkcji szablonowej poprzez słowo kluczowe 'auto', zamiast użycia 'decltype'.
             </p>
-            <h2 class="bookHeader">P. Prince, T. Crawford, Język C w pigułce</h2>
+            <h2 class="bookHeader">P. Prince, T. Crawford, Język C w pigułce<span class="tooltiptext"><a href="https://helion.pl/ksiazki/jezyk-c-w-pigulce-peter-prinz-tony-crawford,e_0har.htm">LINK</a></span></h2>
             <p class="bookParagraph">
                 Książka, którą z powodu zamiłowania do uczenia 'książkowego' po prostu musiałem wypożyczyć. Opisuje bardzo dokładnie
                 tak ważny i (co by nie mówić) prosty język, jakim jest C. W tych parunastu setek stron zdołano opisać narzędzia, bibliotekę
@@ -77,14 +104,14 @@
                 lewostronne io prawostronne, pomocne w zrozumieniu rzeczywistego działania języka poprzez działanie kompilatora. Ciężko powiedzieć,
                 czy istnieje lepsza książka, by w pełni zrozumieć język C.
             </p>
-            <h2 class="bookHeader">Herbert Schildt, Java: Kompendium Programisty</h2>
+            <h2 class="bookHeader">Herbert Schildt, Java: Kompendium Programisty<span class="tooltiptext"><a href="https://helion.pl/ksiazki/java-kompendium-programisty-wydanie-ix-herbert-schildt,javkp9.htm">LINK</a></span></h2>
             <p class="bookParagraph">
                 Książka, z którą zacząłem poznawać Javę. Jest to idealna książka, dla osoby, która chce dokładnie nauczyć się języka Java i
                 poznać jego moduły biblioteczne. Dzięki tej książce zdołałem zaliczyć kurs związany z programowaniem obiektowym.
                 Co więcej, książka pomogła mi w następnych kursach. Wszystko przez to, że może ona także służyć jako zamiennik dokumentacji
                 modułów Javy.
             </p>
-            <h2 class="bookHeader">T.H. Cormen, Wprowadzenie do Algorytmów</h2>
+            <h2 class="bookHeader">T.H. Cormen, Wprowadzenie do Algorytmów<span class="tooltiptext"><a href="https://helion.pl/ksiazki/wprowadzenie-do-algorytmow-cormen-thomas-h-leiserson-charles-e-rivest-rol,a_006d.htm#format/d">LINK</a></span></h2>
             <p class="bookParagraph">
                 Jest to obok książki Stroustrup'a najważniejsza pozycja na tej liście. Książka, często nazywana 'biblią algorytmiczną',
                 jest najbardziej podstawowym źródłem informacji o szeregu fundamentalnych algorytmów. Książka opisuje zarówno podstawy
@@ -92,43 +119,43 @@
                 obliczeniowych i pamięciowyh. Na końcu zaś dział informatyki teoretycznej, wraz z najważniejszą do dziś hipotezą informatyki,
                 czyli równoważność zbiorów P i NP.
             </p>
-            <h2 class="bookHeader">Mark Lutz, Python, Wprowadzenie</h2>
+            <h2 class="bookHeader">Mark Lutz, Python, Wprowadzenie<span class="tooltiptext"><a href="https://helion.pl/ksiazki/python-wprowadzenie-wydanie-iv-mark-lutz,pytho4.htm">LINK</a></span></h2>
             <p class="bookParagraph">
                 Książka, która opisuje szeroko język Python. Dzięki niej można poznać zarówno podstawowe wyrażenia i typy, jak i
                 zanużyć się w metaprogramowaniu. Choć przeczytałem większość tej książki, to po roku zapamiętałem jedynie charakterystykę
                 języka. Brak kontaktu z Python'em ukazał ogromną wadę tej książki, tj. mała część zagadnień jest pamiętana w dłuższym okresie czasu.
                 Jest to wynik m.in. jej 'rozlazłości'.
             </p>
-            <h2 class="bookHeader">Prolog, Programowanie</h2>
+            <h2 class="bookHeader">Prolog, Programowanie<span class="tooltiptext"><a href="https://helion.pl/ksiazki/prolog-programowanie-w-f-clocksin-c-s-mellish,prprol.htm">LINK</a></span></h2>
             <p class="bookParagraph">
                 Krótka, zwięzła i konkretna pozycja. Nauka Prologa jest z nią bardzo ułatwiona. Choć sam język jest prosty, to
                 zadania z nim wymagają dla początkujących dużo wysiłku myślowego. Ta książka to ułatwia, mając w sobie przykłądy
                 i opisy algorytmów.
             </p>
-            <h2 class="bookHeader">D. Mendrala, M. Szeliga, SQL, Praktyczny kurs</h2>
+            <h2 class="bookHeader">D. Mendrala, M. Szeliga, SQL, Praktyczny kurs<span class="tooltiptext"><a href="https://helion.pl/ksiazki/praktyczny-kurs-sql-wydanie-ii-danuta-mendrala-marcin-szeliga,pksql2.htm">LINK</a></span></h2>
             <p class="bookParagraph">
                 Z tej książki zacząłem uczyć się języka SQL. Bardzo szybko można z niej nauczyć się podstaw języka. Nie posiada
                 niepotrzebnych monologów i opisów mało przydatnych narzędzi. Bardzo dobra książka na początek poznawania języków SQL.
             </p>
-            <h2 class="bookHeader">Joe Celko, Praktyki mistrza SQL: programowanie zaawansowane</h2>
+            <h2 class="bookHeader">Joe Celko, Praktyki mistrza SQL: programowanie zaawansowane<span class="tooltiptext"><a href="https://helion.pl/ksiazki/praktyki-mistrza-sql-programowanie-zaawansowane-joe-celko,pmsqlp.htm">LINK</a></span></h2>
             <p class="bookParagraph">
                 Książka bardzo dobra dla osób chcących głęboko zroumieć język SQL. Często opisująca zagadnienia nadzwyczaj formalnie.
                 Jest o samych standardach SQL'a, nie ma więc w niej wielkich zawiłości na temat jego poszczególnych dialektów.
                 Pozwala w obojętnie jakim systemie bazodanowym nauczyć się pisać w sposób prosty i poprawny algorytmicznie.
             </p>
-            <h2 class="bookHeader">Paul DuBois, MySql, Vademecum Programisty</h2>
+            <h2 class="bookHeader">Paul DuBois, MySql, Vademecum Programisty<span class="tooltiptext"><a href="https://helion.pl/ksiazki/mysql-vademecum-profesjonalisty-wydanie-v-paul-dubois,mysvp5.htm">LINK</a></span></h2>
             <p class="bookParagraph">
                 Idealna książka dla osób chcącyh poznać system bazodanowy MySql'a. Jest to świetnie opisana dokumentacja zarówno
                 języka, jak i funkcji administratorskich. W bardzo przystępny i dokładny sposób pozwala poznać dialekt. Dzięki niej
                 nie miałem problemów z napisaniem projektu serwisu bazodanowego.
             </p>
-            <h2 class="bookHeader">J. Albahari, B. Albahari, C# 6.0 w pigułce</h2>
+            <h2 class="bookHeader">J. Albahari, B. Albahari, C# 6.0 w pigułce<span class="tooltiptext"><a href="">LINK</a></span></h2>
             <p class="bookParagraph">
                 Choć przeczytałem jedynie parę rozdziałów tej pozycji, to mogę stwierdzić, że jest to świetnie napisana książka.
                 Jest ona jednocześnie zwięzła, konkretna, jak i szeroko opisująca sam język. Nie mogę o niej więcej napisać, bo
                 nie znam jej całej. Mogę natomiast zapewnić że w wolnym czasie na pewno wrócę do niej i poznam językl C#.
             </p>
-            <h2 class="bookHeader">R.L. Graham, D.E. Knuth, O. Patashnik, Matematyka konkretna</h2>
+            <h2 class="bookHeader">R.L. Graham, D.E. Knuth, O. Patashnik, Matematyka konkretna<span class="tooltiptext"><a href="">LINK</a></span></h2>
             <p class="bookParagraph">
                 Wystarczy znać autora, żeby wiedzieć, że jest to książka typu "must-read" dla każdego informatyka. Książka Knutha jest
                 bardzo ważną pozycją, nie mającą luk informacyjnych, by nauczyć czytelnika o ogromnym dziale, jakim jest matematyka
@@ -136,7 +163,7 @@
                 wprowadzać coraz trudniejsze zagadnienia dla danego tematu. Dlatego też żałuję, że miałem ten kurs na pierwszym roku
                 i nie mogłem się wgryźć aż tak głęboko, jak zrobił bym to teraz.
             </p>
-            <h2 class="bookHeader">C. Martin, Clean Code</h2>
+            <h2 class="bookHeader">C. Martin, Clean Code<span class="tooltiptext"><a href="">LINK</a></span></h2>
             <p class="bookParagraph">
                 Kolejna książka, którą powinien przeczytać każdy programista, chcący być profesjonalistą w swoim fachu. Książka
                 opisuje w bardzo przystępny sposób jakimi zasadami powinien się kierować programista, by tworzyć kod przejrzysty,
@@ -144,7 +171,7 @@
                 dużą liczbę zasad, z którymi ciężko się nie zgodzić. Dodatkowym atutem jest omówionie idei "Test Driven Development",
                 będąca bardzo bezpiecznym i zdobywającym popularność sposobem pisania kodu.
             </p>
-            <h2 class="bookHeader">J.E. Hopcroft, J.D. Ullman, Wprowadzenie do teorii automatów, języków i obliczeń</h2>
+            <h2 class="bookHeader">J.E. Hopcroft, J.D. Ullman, Wprowadzenie do teorii automatów, języków i obliczeń<span class="tooltiptext"><a href="">LINK</a></span></h2>
             <p class="bookParagraph">
                 Książka dotycząca fundamentów informatyki teoretycznej. Podstawowy podręcznik do nauki o automatach, gramatykach i
                 maszynach Turinga. Można nauczyć się z niej esencji informatyki, jej potęgi, zachowań i ograniczeń. Jej nie trzeba polecać.

@@ -13,7 +13,7 @@ header {
     padding: 0.25em 1em 0.25em 1em;
     text-align: center;
     font-family: Century, serif;
-    background-color: #152343;
+    background: linear-gradient(#0a002b, #010c44, #15095f, #16005f);
     color: #f3f9f9;
 }
 
@@ -38,6 +38,11 @@ header {
     color: #EEEEEE;
     font-style: normal;
     text-decoration: none;
+    transition: color 0.5s, color 0.5s;
+}
+
+.topTitle:hover {
+    color: #cd4f00;
 }
 
 .topSubtitle {
@@ -54,8 +59,8 @@ header {
     padding: 1em 0.7em 0.4em 0.7em;
     margin: 0 0.4em 0.6em 0.4em;
     text-align: justify;
-    font-family: Calibri, serif;
-    background-color: #c6c9ce;
+    font-family: Calibri, sans-serif;
+    background-color: #cfd2d7;
     color: #091c21;
     min-height: 24em;
 }
@@ -70,6 +75,12 @@ header {
     max-height: 13em;
     border-radius: 12px;
     margin: 0.2em 0.2em 0.1em 0.7em;
+    opacity: 1;
+}
+
+#face:hover {
+    opacity: 0.9;
+    box-shadow: 0 3px 3px 3px rgba(6, 32, 35, 0.78);
 }
 
 #menu {
@@ -141,5 +152,60 @@ header {
     }
 }
 
+.menu-h
+{
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 0.15em;
+    background-color: inherit;
+    overflow: hidden;
+    color: #476ba3;
+}
+.menu-h li
+{
+    float:left;
+    margin: 0 0.25em 0 0.25em;
+}
+
+.menu-h li * {
+    text-align: center;
+    font-family: Calibri, sans-serif;
+}
+
+.menu-h a
+{
+    display: block;
+    background: #0b216a;
+    color: #e0f6d5;
+    border-radius: 1px;
+    font-weight: 300;
+    font-size: large;
+    padding: 0.3em;
+    text-decoration-line: none;
+}
+.menu-h a:hover
+{
+    background-color: #bc0e09;
+    color: #e8f5da;
+}
+
+#array {
+    font-size: large;
+    font-weight: 800;
+    color: #d3502e;
+    padding-top: 0.15em;
+}
+
+#location {
+    display: block;
+    background: #691316;
+    color: #e0f6d5;
+    border-radius: 2px;
+    font-weight: 300;
+    font-size: large;
+    padding: 0.3em;
+    text-decoration-line: none;
+font-family: Calibri, sans-serif;
+}
 
 

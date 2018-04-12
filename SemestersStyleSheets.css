@@ -137,11 +137,17 @@
     padding: 0.1em 0.15em 0.1em 0.15em;
     max-width: 45%;
     border-radius: 3px;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+.semesterHeader:hover {
+    background-color: #510512;
+    color: #63a400;
 }
 
 
 .semester {
-    background-color: #b7c1be;
+    background-color: #cdbdbe;
     border: 2px solid #737f88;
     margin: 2em 0.8em 1em 0.8em;
     padding: 0.1em 0.5em 0.3em 0.5em;

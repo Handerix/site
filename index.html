@@ -1,97 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
-    <meta charset="utf-8">
-    <title>My Card</title>
-    <meta name="description" content=" Wizytówka ">
+    <meta charset="UTF-8">
+    <title>Main Menu</title>
+    <meta name="description" content=" Moje przygody z edukacją: Strona Główna ">
     <meta name="author" content=" Robert Gawlik">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="BasicStyleSheet.css">
     <style>
-
-        * {
-            margin: 0 auto;
-            border-width: 1pc;
-            border: dotted;
-            border-color: brown;
-            text-align: center;
+        .tabHeader {
+            font-family: "Arial",sans-serif;
+            font-size: x-large;
+            font-weight: 100;
+            text-shadow: 1px 1px 1px #292700;
+            color: #150e2b;
+            padding: 1px 3px 1px 8px;
+            border-left: double;
+            border-color: #604040;
+            text-align: left;
         }
 
-        body{
-            background-color:rgb(20,15,15);
+        #about_me {
+            font-family: "Tahoma",sans-serif;
+            padding: 0.3em;
+            color: #121210;
         }
 
-        .card {
-            min-width: 9em;
-            width: 28%;
-            padding: 1em;
-            display: block;
-            margin: 0 auto;
-            background-color: #707070;
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            transition: 0.3s;
-            border-radius: 12px;
-            border-bottom-right-radius: 28px;
+        li {
+            font-family: "Futura",sans-serif;
+            color: #090204;
+            padding: 0.1em 0.3em 0.1em 0.3em;
+            margin-top: 2px;
         }
 
-        img {
-            width: 100%;
-            height: 100%;
-            margin: 0 auto;
-            border-radius: 13px 13px 5px 5px;
+        li > a {
+            background-color: #2b0855;
+            font-family: "Futura",sans-serif;
+            color: #e0f6d5;
+            border-radius: 7px;
+            font-weight: 300;
+            padding: 0.05em 0.3em 0.05em 0.3em;
+            text-decoration-line: none;
         }
 
-        .card:hover {
-            margin: 0 auto;
-            padding: 1em;
-            box-shadow: 0 5px 11px 0 rgba(247,250,247,0.5);
-            background-color: #6081a3;
+        li > a:hover {
+            background-color: #cf0803;
+            font-size: medium;
+            color: #e8f5da;
+            border-radius: 8px;
+            font-weight: 300;
+            padding: 0.08em 0.3em 0.08em 0.3em;
+            margin-left: 0.4em;
+            text-decoration-line: none;
         }
-
-        .container {
-            margin: 1em auto 1em auto;
-            padding: 0.5em 0.2em 0.5em 0.2em;
-            background-color: rgba(195, 205, 230, 0.9);
-            border-radius: 10px;
-            border-width: 1pc;
-            border: dotted;
-            border-color: brown;
-            box-shadow: 0 0 0.5em 0.5em rgba(35,35,45,0.8);
-        }
-
-        .container * {
-            margin: 0.1em auto 0.1em auto;
-            padding: 1px 1px 1px 1px;
-            color: #102025;
-            text-shadow: azure;
-            font-family: Arial,sans-serif;
-            min-font-size: medium;
-        }
-
-        #title {
-            margin: 0 auto 1px auto;
-            color: #051040;
-            font-family: Century,serif;
-        }
-
-        #names {
-            color: #051040;
-        }
-
     </style>
 </head>
 <body>
-
-    <div class="card">
-        <h2 id="title"><b>My Card</b></h2>
-        <img src="wilk.png" alt="Avatar">
-        <div class="container">
-            <h3 id="names"><b>Robert Gawlik</b></h3>
-            <p>Student</p>
-            <p>IT science, WPPT</p>
-            <p>Politechnika Wrocławska</p>
-            <p><a href="">Contact</a></p>
+<div class="container">
+    <article id="window">
+        <header>
+            <h1><a class="topTitle" href="index.html">Robert Gawlik</a></h1>
+            <h2 class="topSubtitle">Przygody z edukacją</h2>
+            <h3 class="topContentTitle">Strona Główna</h3>
+        </header>
+        <div class="content">
+            <section id="descSection">
+                <h3 class="tabHeader">O mnie </h3>
+                <p id="about_me">
+                    <span>
+                        <img id="face" src="twarz.png" alt="face photo">
+                    </span>
+                    Urodziłem się w Zielonej Górze, w roku 1996. Szkoły do których chodziłem to kolejno: Szkoła Podstawowa Nr 10,
+                    Gimnazjum Nr 6 i Liceum Ogólnokrztałcące Nr 3. Od 2015 roku jestem studentem Informatyki na Politechnice Wrocławskiej
+                    na Wydziale Podstawowych Problemów Techniki. Z powodzeniem zdobywam wiedzę na 6 semestrze.
+                </p>
+            </section>
+            <div id="menu">
+                <div class="row">
+                    <article class="colLeft">
+                        <h2 class="tabHeader">Nauka</h2>
+                        <ul>
+                            <li><a href="rok_pierwszy.html">Studia: rok pierwszy</a></li>
+                            <li><a href="rok_drugi.html">Studia: rok drugi</a></li>
+                            <li><a href="rok_trzeci.html">Studia: rok trzeci</a></li>
+                        </ul>
+                    </article>
+                    <article class="colRight">
+                        <h2 class="tabHeader">Hobby</h2>
+                        <ul>
+                            <li><a href="ksiazki.html">Książki informatyczne</a></li>
+                            <li>Zagadnienia algorytmiczne</li>
+                            <li>Piłka nożna, siatkówka</li>
+                            <li>Książki A. Sapkowskiego</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
         </div>
-    </div>
-
+    </article>
+</div>
 </body>
 </html>
