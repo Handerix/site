@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zad2</title>
+
+    <style>
+        canvas {
+            border: 5px double #505050;
+        }
+    </style>
+
+</head>
+<body>
+
+<form id="firstForm" action="javascript:;" onsubmit="changeCanv()">
+    Change canvas width: <input id="wi" type="number" value="640" title="Width"/>
+    <input type="submit" value="DO">
+</form>
+
+<form id="changeDeepForm" action="javascript:;" onsubmit="change_deep()">
+    Deep: <input id="val_deep" type="number" value="3" title="DEEP"/>
+    <input type="submit" value="DO">
+</form>
+
+<canvas id="canv" width="640" height="640">
+    Canvas is not supported in your browser
+</canvas>
+
+<script>
+
+    //var circleRad=6.28318531;
+    var deep=3;
+
+    var canv= document.getElementById("canv").getContext("2d");
+
+    canv.lineWidth= 1;
+
+
+    var clearScreen= function()
+    {
+        canv.globalCompositeOperation="source-over";
+        canv.fillStyle="black";
+        canv.fillRect(0,0, canv.canvas.width, canv.canvas.height );
+    };
+
+    function change_deep()
+    {
+        deep= document.getElementById("val_deep").value;
+        clearScreen();
+        draw(deep);
+    }
+
+    function changeCanv()
+    {
+        var wiVal=document.getElementById("wi").value;
+
+        var c= document.getElementById("canv");
+        c.setAttribute("height", wiVal);
+        c.setAttribute("width", wiVal);
+        clearScreen();
+        draw(deep);
+        return false;
+    }
+
+    function draw(step)
+    {
+        canv.lineWidth= 1;
+        var c=document.getElementById("canv");
+        draw_recursive([Math.floor(c.width*0.1),Math.floor(c.height*0.3)], [Math.floor(c.width*1),Math.floor(c.height*0.3)], step);
+        draw_recursive([Math.floor(c.width*0.54),Math.floor(c.height*0.98)], [Math.floor(c.width*0.1),Math.floor(c.height*0.3)], step);
+        draw_recursive([Math.floor(c.width*1),Math.floor(c.height*0.3)],[Math.floor(c.width*0.54),Math.floor(c.height*0.98)], step);
+    }
+
+    function draw_recursive(p1, p5, step)
+    {
+        if(step<0)
+            return false;
+
+        var p2 = div(sum(mult(p1, 2), p5), 3);
+        var p4 = div(sum(mult(p5, 2), p1), 3);
+        var center = div(sum(p1, p5), 2);
+
+        var V1 = div(diff(center, p1), length(center, p1));
+        var V2 = [V1[1], -V1[0]];
+
+        var p3 = sum(mult(V2, Math.sqrt(3)/6 * length(p5, p1)), center);
+
+        canv.strokeStyle="red";
+        draw_line(p1, p5);
+        canv.strokeStyle="blue";
+
+        if(step!==0)
+            draw_line(p2, p4);
+
+        draw_recursive(p1, p2, step-1);
+        draw_recursive(p2, p3, step-1);
+        draw_recursive(p3, p4, step-1);
+        draw_recursive(p4, p5, step-1);
+    }
+
+    function mult(v, n)
+    {
+        return [v[0]*n, v[1]*n];
+    }
+
+    function div(v, n)
+    {
+        return [v[0]/n, v[1]/n];
+    }
+
+    function sum(a, b)
+    {
+        return [a[0]+b[0], a[1]+b[1]];
+    }
+
+    function diff(a, b)
+    {
+        return [a[0]-b[0], a[1]-b[1]];
+    }
+
+    function length(a, b)
+    {
+        return Math.sqrt(Math.pow(a[0] - b[0],2) + Math.pow(a[1] - b[1],2));
+    }
+
+    function draw_line(p1, p2)
+    {
+        canv.beginPath();
+        canv.moveTo(p1[0], p1[1]);
+        canv.lineTo(p2[0], p2[1]);
+        canv.stroke();
+        canv.closePath();
+    }
+
+    clearScreen();
+    draw(deep);
+
+</script>
+
+</body>
+</html>

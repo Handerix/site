@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zad1 - Wielokąty foremne</title>
+
+    <style>
+        canvas {
+            border: 5px double #505050;
+        }
+    </style>
+
+</head>
+<body>
+
+<form id="firstForm" action="javascript:;" onsubmit="changeCanv(this)">
+    Change canvas size: width <input id="wi" type="number" value="640" title="Width"/>
+    height <input id="he" type="number" value="480" title="Height"/>
+    <input type="submit" value="DO">
+</form>
+
+<canvas id="canv" width="640" height="480">
+    Canvas is not supported in your browser
+</canvas>
+
+<script>
+
+    var circleRad=6.28318531;
+    var currRadian=0;
+    var currX=0.5;
+    var currY=0.5;
+    var pen=true;
+
+    var minPixel=0.005;
+    var rminx=0;
+    var rmaxx=1;
+    var rminy=0;
+    var rmaxy=1;
+
+    var canv= document.getElementById("canv").getContext("2d");
+
+    canv.lineWidth= 3;
+
+    var rx= function (x ){
+        return (x-rminx)/(rmaxx-rminx)*(canv.canvas.width);
+    };
+
+    var ry= function (y ){
+        return canv.canvas.height-(y-rminy)/(rmaxy-rminy)*(canv.canvas.height);
+    };
+
+    var move= function(x) {
+        if(pen)
+        {
+            canv.beginPath();
+            canv.moveTo(rx(currX), ry(currY));
+        }
+        currX+=x*Math.sin(currRadian);
+        currY+=x*Math.cos(currRadian);
+        if(currX<rminx)
+        {
+            currX=rminx;
+        }
+        else if(currX>rmaxx)
+        {
+            currX=rmaxx;
+        }
+        if(currY<rminy)
+        {
+            currY=rminy;
+        }
+        else if(currY>rmaxy)
+        {
+            currY=rmaxy;
+        }
+        if(pen)
+        {
+            canv.lineTo(rx(currX), ry(currY));
+            canv.stroke();
+            canv.closePath();
+        }
+    };
+
+
+    var clearScreen= function() {
+        canv.globalCompositeOperation="source-over";
+        canv.fillStyle="grey";
+        canv.fillRect(0,0, canv.canvas.width, canv.canvas.height );
+    };
+
+    var do_forward = function(x)
+    {
+        move(x*minPixel);
+    };
+
+    var do_backward = function(x)
+    {
+        move(-x*minPixel);
+    };
+
+    var do_left = function(x)
+    {
+        currRadian-=x;
+    };
+
+    var do_right = function(x)
+    {
+        currRadian+=x;
+    };
+
+    var do_pen_up = function()
+    {
+        pen=false;
+    };
+
+    var do_pen_down = function()
+    {
+        pen=true;
+    };
+
+    var do_center = function (x)
+    {
+        currX=(rmaxx-rminx)/2;
+        currY=(rmaxy-rminy)/2;
+    };
+
+    function redraw()
+    {
+        clearScreen(canv, "rgb(0,0,0)");
+
+        canv.strokeStyle="red";
+        canv.lineWidth= 3;
+
+
+
+        do_pen_up();
+        do_backward(70);
+        do_left(circleRad/4);
+        do_forward(70);
+        do_right(circleRad/4);
+        do_pen_down();
+        do_forward(40);
+        do_left(circleRad/6);
+        do_backward(40);
+        do_left(circleRad/6);
+        do_forward(40);
+        do_left(circleRad/6);
+        do_left(circleRad/2);
+        do_pen_up();
+        do_forward(140);
+        do_right(circleRad/4);
+        do_forward(50);
+        do_pen_down();
+        do_forward(30);
+        do_right(circleRad/4);
+        do_forward(30);
+        do_right(circleRad/4);
+        do_forward(30);
+        do_right(circleRad/4);
+        do_forward(30);
+        do_right(circleRad/4);
+        do_pen_up();
+        do_forward(100);
+        do_right(circleRad/4);
+        do_forward(70);
+        do_pen_down();
+        do_forward(20);
+        do_right(circleRad/12);
+        do_forward(20);
+        do_right(circleRad/12);
+        do_forward(20);
+        do_right(circleRad/12);
+        do_forward(20);
+        do_right(circleRad/12);
+        do_forward(20);
+        do_right(circleRad/12);
+        do_forward(20);
+        do_right(circleRad/12);
+        do_forward(20);
+        do_right(circleRad/12);
+        do_forward(20);
+        do_right(circleRad/12);
+        do_forward(20);
+        do_right(circleRad/12);
+        do_forward(20);
+        do_right(circleRad/12);
+        do_forward(20);
+        do_right(circleRad/12);
+        do_forward(20);
+
+        do_center(null);
+        currRadian=currRadian-currRadian%(circleRad/8);
+        do_right(circleRad/4);
+    }
+
+    function changeCanv()
+    {
+        var wiVal=document.getElementById("wi").value;
+        var heVal=document.getElementById("he").value;
+
+        var c= document.getElementById("canv");
+        c.setAttribute("height", heVal);
+        c.setAttribute("width", wiVal);
+        redraw();
+        return false;
+    }
+
+    redraw();
+
+</script>
+
+</body>
+</html>

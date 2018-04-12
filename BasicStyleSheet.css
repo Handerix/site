@@ -13,7 +13,7 @@ header {
     padding: 0.25em 1em 0.25em 1em;
     text-align: center;
     font-family: Century, serif;
-    background: linear-gradient(#0a002b, #010c44, #15095f, #16005f);
+    background: linear-gradient(#0c022c, #010c44, #150d5f, #16005f);
     color: #f3f9f9;
 }
 
@@ -128,7 +128,7 @@ header {
 }
 
 
-@media screen and (min-width: 450px)
+@media screen and (min-width: 600px)
 {
     .colRight {
         float: right;
@@ -179,7 +179,7 @@ header {
     color: #e0f6d5;
     border-radius: 1px;
     font-weight: 300;
-    font-size: large;
+    font-size: medium;
     padding: 0.3em;
     text-decoration-line: none;
 }
@@ -190,7 +190,7 @@ header {
 }
 
 #array {
-    font-size: large;
+    font-size: medium;
     font-weight: 800;
     color: #d3502e;
     padding-top: 0.15em;
@@ -202,7 +202,7 @@ header {
     color: #e0f6d5;
     border-radius: 2px;
     font-weight: 300;
-    font-size: large;
+    font-size: medium;
     padding: 0.3em;
     text-decoration-line: none;
 font-family: Calibri, sans-serif;

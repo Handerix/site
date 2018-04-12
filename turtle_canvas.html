@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zad1</title>
+
+    <style>
+        canvas {
+            border: 5px double #505050;
+        }
+    </style>
+
+</head>
+<body>
+
+    <form id="firstForm" action="javascript:;" onsubmit="changeCanv(this)">
+        Change canvas size: width <input id="wi" type="number" value="640" title="Width"/>
+        height <input id="he" type="number" value="480" title="Height"/>
+        <input type="submit" value="DO">
+    </form>
+
+    <p id="pen">Pen down</p>
+
+    <form id="forwardForm" action="javascript:;" onsubmit="do_forward(this)">
+        Forward: <input id="val_forward" type="number" value="1" title="FORWARD" step="any"/>
+        <input type="submit" value="DO">
+    </form>
+
+    <form id="backwardForm" action="javascript:;" onsubmit="do_backward(this)">
+        Backward: <input id="val_backward" type="number" value="1" title="Backward" step="any"/>
+        <input type="submit" value="DO">
+    </form>
+
+    <form id="leftForm" action="javascript:;" onsubmit="do_left(this)">
+        Left: <input id="val_left" type="number" value="1" title="LEFT" step="any"/>
+        <input type="submit" value="DO">
+    </form>
+
+    <form id="rightForm" action="javascript:;" onsubmit="do_right(this)">
+        Right: <input id="val_right" type="number" value="1" title="RIGHT" step="any"/>
+        <input type="submit" value="DO">
+    </form>
+
+    <form id="penUpForm" action="javascript:;" onsubmit="do_pen_up(this)">
+        <input type="submit" value="Pen Up">
+    </form>
+
+    <form id="penDownForm" action="javascript:;" onsubmit="do_pen_down(this)">
+        <input type="submit" value="Pen Down">
+    </form>
+
+    <form id="clearForm" action="javascript:;" onsubmit="do_clear(this)">
+        <input type="submit" value="Clear">
+    </form>
+
+    <form id="centerForm" action="javascript:;" onsubmit="do_center(this)">
+        <input type="submit" value="Center">
+    </form>
+
+    <canvas id="canv" width="640" height="480">
+        Canvas is not supported in your browser
+    </canvas>
+
+    <p id="pos"></p>
+
+    <script>
+
+        var currRadian=0;
+        var currX=0.5;
+        var currY=0.5;
+        var pen=true;
+        var penEl=document.getElementById("pen");
+        var posEl=document.getElementById("pos");
+        posEl.innerHTML= "X: " + currX + ", Y: " + currY + ", angle: " + currRadian;
+
+        var minPixel=0.005;
+        var rminx=0;
+        var rmaxx=1;
+        var rminy=0;
+        var rmaxy=1;
+
+        var canv= document.getElementById("canv").getContext("2d");
+
+        canv.lineWidth= 3;
+
+        var rx= function (x ){
+            return (x-rminx)/(rmaxx-rminx)*(canv.canvas.width);
+        };
+
+        var ry= function (y ){
+            return canv.canvas.height-(y-rminy)/(rmaxy-rminy)*(canv.canvas.height);
+        };
+
+        var move= function(x) {
+            if(pen)
+            {
+                canv.beginPath();
+                canv.moveTo(rx(currX), ry(currY));
+            }
+            currX+=x*Math.sin(currRadian);
+            currY+=x*Math.cos(currRadian);
+            if(currX<rminx)
+            {
+                currX=rminx;
+            }
+            else if(currX>rmaxx)
+            {
+                currX=rmaxx;
+            }
+            if(currY<rminy)
+            {
+                currY=rminy;
+            }
+            else if(currY>rmaxy)
+            {
+                currY=rmaxy;
+            }
+            if(pen)
+            {
+                canv.lineTo(rx(currX), ry(currY));
+                canv.stroke();
+                canv.closePath();
+            }
+            posEl.innerHTML= "X: " + currX + ", Y: " + currY + ", angle: " + currRadian;
+        };
+
+
+        var clearScreen= function() {
+            canv.globalCompositeOperation="source-over";
+            canv.fillStyle="white";
+            canv.fillRect(0,0, canv.canvas.width, canv.canvas.height );
+        };
+
+        var do_forward = function(x)
+        {
+            var l= document.getElementById("val_forward").value;
+            move(l*minPixel);
+        };
+
+        var do_backward = function(x)
+        {
+            var l= document.getElementById("val_backward").value;
+            move(-l*minPixel);
+        };
+
+        var do_left = function(x)
+        {
+            var l= document.getElementById("val_left").value;
+            currRadian-=l*0.1;
+            posEl.innerHTML= "X: " + currX + ", Y: " + currY + ", angle: " + currRadian;
+        };
+
+        var do_right = function(x)
+        {
+            var l= document.getElementById("val_right").value;
+            currRadian+=l*0.1;
+            posEl.innerHTML= "X: " + currX + ", Y: " + currY + ", angle: " + currRadian;
+        };
+
+        var do_pen_up = function(x)
+        {
+            pen=false;
+            penEl.innerHTML="Pen up";
+        };
+
+        var do_pen_down = function(x)
+        {
+            pen=true;
+            penEl.innerHTML="Pen down";
+        };
+
+        var do_clear = function(x)
+        {
+            clearScreen();
+        };
+
+        var do_center = function (x)
+        {
+            currX=(rmaxx-rminx)/2;
+            currY=(rmaxy-rminy)/2;
+            currRadian=0;
+            posEl.innerHTML= "X: " + currX + ", Y: " + currY + ", angle: " + currRadian;
+        };
+
+        function changeCanv()
+        {
+            var wiVal=document.getElementById("wi").value;
+            var heVal=document.getElementById("he").value;
+
+
+            var c= document.getElementById("canv");
+            c.setAttribute("height", heVal);
+            c.setAttribute("width", wiVal);
+            return false;
+        }
+
+
+    </script>
+
+</body>
+</html>

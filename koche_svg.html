@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zad3</title>
+
+    <style>
+        svg {
+            border: 5px double #505050;
+            background-color: #0d0917;
+        }
+    </style>
+
+</head>
+<body>
+
+<form id="firstForm" action="javascript:;" onsubmit="changeSVG()">
+    Change svg width: <input id="wi" type="number" value="640" title="Width"/>
+    <input type="submit" value="DO">
+</form>
+
+<form id="changeDeepForm" action="javascript:;" onsubmit="change_deep()">
+    Deep: <input id="val_deep" type="number" value="3" title="DEEP"/>
+    <input type="submit" value="DO">
+</form>
+
+<svg id="svg" width="640" height="640">
+    <g id="group2">
+        <g id="group3">
+            <g id="group">
+            </g>
+        </g>
+    </g>
+    Canvas is not supported in your browser
+</svg>
+
+<script>
+
+    //var circleRad=6.28318531;
+    var deep=3;
+
+    var svg= document.getElementById("svg");
+    var group= document.getElementById("group");
+    var group2= document.getElementById("group2");
+    var group3= document.getElementById("group3");
+
+
+    var clearScreen= function()
+    {
+        while (group.firstChild)
+        {
+            group.removeChild(group.firstChild);
+        }
+
+    };
+
+    function change_deep()
+    {
+        deep= document.getElementById("val_deep").value;
+        clearScreen();
+        draw(deep);
+    }
+
+    function changeSVG()
+    {
+        var wiVal=document.getElementById("wi").value;
+        svg.setAttribute("height", wiVal);
+        svg.setAttribute("width", wiVal);
+        clearScreen();
+        draw(deep);
+        return false;
+    }
+
+    function draw(step)
+    {
+        var width=svg.getAttribute("width");
+        var height=svg.getAttribute("height");
+        draw_recursive([Math.floor(width*0.1),Math.floor(height*0.25)], [Math.floor(width*1),Math.floor(height*0.25)], step);
+        draw_recursive([Math.floor(width*0.54),Math.floor(height*1)], [Math.floor(width*0.1),Math.floor(height*0.25)], step);
+        draw_recursive([Math.floor(width*1),Math.floor(height*0.25)],[Math.floor(width*0.54),Math.floor(height*1)], step);
+        put_animates();
+    }
+
+    function draw_recursive(p1, p5, step)
+    {
+        if(step<0)
+            return false;
+
+        var p2 = div(sum(mult(p1, 2), p5), 3);
+        var p4 = div(sum(mult(p5, 2), p1), 3);
+        var center = div(sum(p1, p5), 2);
+
+        var V1 = div(diff(center, p1), length(center, p1));
+        var V2 = [V1[1], -V1[0]];
+
+        var p3 = sum(mult(V2, Math.sqrt(3)/6 * length(p5, p1)), center);
+
+        draw_line(p1, p5);
+
+        if(step!==0)
+            draw_line(p2, p4);
+
+        draw_recursive(p1, p2, step-1);
+        draw_recursive(p2, p3, step-1);
+        draw_recursive(p3, p4, step-1);
+        draw_recursive(p4, p5, step-1);
+    }
+
+    function mult(v, n)
+    {
+        return [v[0]*n, v[1]*n];
+    }
+
+    function div(v, n)
+    {
+        return [v[0]/n, v[1]/n];
+    }
+
+    function sum(a, b)
+    {
+        return [a[0]+b[0], a[1]+b[1]];
+    }
+
+    function diff(a, b)
+    {
+        return [a[0]-b[0], a[1]-b[1]];
+    }
+
+    function length(a, b)
+    {
+        return Math.sqrt(Math.pow(a[0] - b[0],2) + Math.pow(a[1] - b[1],2));
+    }
+
+    function draw_line(p1, p2)
+    {
+        var el= document.createElementNS("http://www.w3.org/2000/svg", "line");
+        el.setAttribute("x1", p1[0]);
+        el.setAttribute("y1", p1[1]);
+        el.setAttribute("x2", p2[0]);
+        el.setAttribute("y2", p2[1]);
+        el.setAttribute('stroke', "rgb(240, 0, 240)");
+        el.setAttribute('stroke-width', "1");
+
+        group.appendChild(el);
+    }
+
+    function put_animates()
+    {
+        var width=svg.getAttribute("width");
+
+        var el= document.createElementNS("http://www.w3.org/2000/svg", "animateTransform");
+        el.setAttribute("attributeName", "transform");
+        el.setAttribute('attributeType', "XML");
+        el.setAttribute('from', "0 " + width/2 + " " + width/2);
+        el.setAttribute('to', width + " " + width/2 + " " + width/2);
+        el.setAttribute('begin', "0s");
+        el.setAttribute('dur', "10s");
+        el.setAttribute('type', "rotate");
+        el.setAttribute('repeatCount', "indefinite");
+
+        var el2= document.createElementNS("http://www.w3.org/2000/svg", "animateTransform");
+        el2.setAttribute("attributeName", "transform");
+        el2.setAttribute('from', "1 1");
+        el2.setAttribute('to', "0.2 0.2");
+        el2.setAttribute('begin', "0s");
+        el2.setAttribute('dur', "10s");
+        el2.setAttribute('type', "scale");
+        el2.setAttribute('repeatCount', "indefinite");
+
+
+        group.appendChild(el);
+        group2.appendChild(el2);
+
+    }
+
+    clearScreen();
+    draw(deep);
+
+</script>
+
+</body>
+</html>
