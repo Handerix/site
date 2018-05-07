@@ -1,0 +1,511 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content=" Robert Gawlik">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="CSS/reset.css">
+    <link rel="stylesheet" type="text/css" href="CSS/BasicStyleSheet.css">
+    <title>Zad2 L2</title>
+    <meta name="description" content="Robert Gawlik: z2l2">
+    <style>
+        canvas {
+            border: 5px double #505050;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <article id="window">
+        <header>
+            <h1 class="topTitleHeader"><a class="topTitle" href="/">Robert Gawlik</a></h1>
+            <h2 class="topSubtitle">Przygody z Edukacją</h2><h3 class="topContentTitle">Zad2 L2</h3>
+        </header>
+        <div class="content">
+
+            <form id="firstForm" action="javascript:" onsubmit="change_canv()">
+                Change canvas width: <input id="wi" type="number" value="640" title="Width"/>
+                <input type="submit" value="DO">
+            </form>
+
+            <canvas id="canv" width="640" height="640" tabindex='1'>
+                Canvas is not supported in your browser
+            </canvas>
+
+            <script>
+
+                var canvas= document.getElementById("canv");
+                var gl= canvas.getContext("experimental-webgl");
+                gl.viewport(0,0,canvas.width, canvas.height);
+                gl.lineWidth= 1;
+
+                var pointSize= 8.0;
+                var gameRunning= false;
+
+                var paddle2CenterX= 0.0;
+                var paddle2CenterY= 0.8;
+                var paddle2Color= new Float32Array([0.1, 0.9, 0.3, 0.95, 0.7, 0.3, 0.2, 0.95, 0.9, 0.9, 0.1, 0.95, 0.1, 0.7, 10.5, 0.95]);
+                var paddleCenterX= 0.0;
+                var paddleCenterY= -0.8;
+                var paddleColor= new Float32Array([0.1, 0.0, 0.9, 0.95, 0.4, 0.8, 0.5, 0.95, 0.9, 0.1, 0.1, 0.95, 0.4, 0.2, 1.0, 0.95]);
+                var ballCenterX= 0.0;
+                var ballCenterY= 0.0;
+                var ballColor= new Float32Array([0.9, 0.0, 0.0, 0.95, 0.1, 0.9, 0.1, 0.95, 0.0, 0.0, 0.9, 0.95, 0.9, 0.9, 0.9, 0.95]);
+
+                var ballSpeed= 0.017;
+                var paddleSpeed= 0.01;
+                var ballAngle= 50;
+                var ballSize= 0.01;
+                var paddleRightWay= true;
+                var paddle2RightWay= true;
+
+                var paddleVertices= new Float32Array([ 0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0 ]);
+                var paddle2Vertices= new Float32Array([ 0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0 ]);
+                var ballVertices= new Float32Array([ 0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0 ]);
+
+                var fCenters= [];
+                var fColors= [];
+                var fSizes= [];
+                var fRotations= [];
+
+                var fVertices = new Float32Array(0);
+
+                updateVertices();
+
+                function createFigure()
+                {
+                    if(Math.random()>0.3)
+                        return;
+
+                    var cr1= Math.random()*0.15+0.1;
+                    var cg1= Math.random()*0.15+0.1;
+                    var cb1= Math.random()*0.15+0.1;
+                    var cr2= Math.random()*0.15+0.1;
+                    var cg2= Math.random()*0.15+0.1;
+                    var cb2= Math.random()*0.15+0.1;
+                    fColors.push(cr1);
+                    fColors.push(cg1);
+                    fColors.push(cb1);
+                    fColors.push(0.8);
+                    fColors.push(cr2);
+                    fColors.push(cg2);
+                    fColors.push(cb2);
+                    fColors.push(0.8);
+                    fColors.push(cr1);
+                    fColors.push(cg1);
+                    fColors.push(cb1);
+                    fColors.push(0.8);
+                    fColors.push(cr2);
+                    fColors.push(cg2);
+                    fColors.push(cb2);
+                    fColors.push(0.8);
+
+                    var y= -1.0+Math.random()*2;
+                    var x= -1.0;
+                    var z= 1.0;
+                    var size= Math.random()*0.5+0.2;
+
+                    fCenters.push(x);
+                    fCenters.push(y);
+                    fCenters.push(z);
+                    fSizes.push(size);
+                }
+
+                function moveBall()
+                {
+                    var radian= Math.PI * ballAngle / 180.0;
+                    var xT= Math.cos(radian)*ballSpeed;
+                    var yT= Math.sin(radian)*ballSpeed;
+                    ballCenterX= ballCenterX+xT;
+                    ballCenterY= ballCenterY+yT;
+
+                    if(ballCenterX>1.0-ballSize || ballCenterX< -1.0+ballSize) // odbicie o pionową ścianę
+                    {
+                        ballAngle=(540-ballAngle)%360;
+                    }
+
+                    if(ballCenterY>1.0-ballSize || ballCenterY<-1.0+ballSize)
+                    {
+                        return endGame();
+                    }
+
+                    if( ballCenterY<paddleCenterY+0.025 && paddleCenterY<ballCenterY
+                        && paddleCenterX-0.21<ballCenterX && ballCenterX<paddleCenterX+0.21
+                        && ballAngle>=180 ) // odbicie od paletki
+                    {
+                        if( (paddleRightWay && ballAngle>=270) || (!paddleRightWay && ballAngle<270) )
+                            ballAngle=Math.min(360-ballAngle+Math.random()*15, 143);
+                        else
+                            ballAngle=Math.max(360-ballAngle-Math.random()*15, 37);
+                    }
+                    else if( ballCenterY>paddle2CenterY-0.025 && paddle2CenterY>ballCenterY
+                        && paddle2CenterX-0.21<ballCenterX && ballCenterX<paddle2CenterX+0.21
+                        && ballAngle<=180 ) // odbicie od paletki
+                    {
+                        if( (paddle2RightWay && ballAngle>=90) || (!paddle2RightWay && ballAngle<90) )
+                            ballAngle=Math.max(360-ballAngle-Math.random()*15, 217);
+                        else
+                            ballAngle=Math.min(360-ballAngle+Math.random()*15, 323);
+                    }
+                }
+
+                function movePaddle()
+                {
+                    if(paddleRightWay)
+                    {
+                        paddleCenterX=Math.min(paddleCenterX+paddleSpeed, 1.0-0.2);
+                    }
+                    else
+                    {
+                        paddleCenterX=Math.max(paddleCenterX-paddleSpeed, -1.0+0.2);
+                    }
+                }
+
+                function movePaddle2()
+                {
+                    if(paddle2RightWay)
+                    {
+                        paddle2CenterX=Math.min(paddle2CenterX+paddleSpeed, 1.0-0.2);
+                    }
+                    else
+                    {
+                        paddle2CenterX=Math.max(paddle2CenterX-paddleSpeed, -1.0+0.2);
+                    }
+                }
+
+                function endGame()
+                {
+                    paddleCenterX= 0.0;
+                    paddleCenterY= -0.8;
+                    paddle2CenterX= 0.0;
+                    paddle2CenterY= 0.8;
+                    ballCenterX= 0.0;
+                    ballCenterY= 0.0;
+                }
+
+                function startGame()
+                {
+                    gameRunning= true;
+                    requestAnimationFrame(run);
+                }
+
+                function stopGame()
+                {
+                    gameRunning= false;
+                }
+
+                var vertexShaderSrc =
+                    "attribute vec4 vColor; \n" +
+                    "attribute float pointSize; \n" +
+                    "attribute vec3 vertexPos; \n" +
+                    "varying mediump vec4 vertexColor; \n" +
+                    "uniform mat4 modelMatrix; \n" +
+                    "uniform mat4 projectionMatrix; \n" +
+                    " void main(void) { gl_Position= projectionMatrix * (modelMatrix * vec4(vertexPos,1.0)); \n" +
+                    " gl_PointSize= pointSize; vertexColor= vColor; } \n";
+
+                var fragmShaderSrc =
+                    "varying mediump  vec4 vertexColor; \n" +
+                    "void main(void) { gl_FragColor = vertexColor; } \n";
+
+
+                var vertShader = gl.createShader(gl.VERTEX_SHADER);
+                gl.shaderSource(vertShader, vertexShaderSrc);
+                gl.compileShader(vertShader);
+
+                var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
+                gl.shaderSource(fragShader, fragmShaderSrc);
+                gl.compileShader(fragShader);
+
+
+                var shaderProgram = gl.createProgram();
+                gl.attachShader(shaderProgram, vertShader);
+                gl.attachShader(shaderProgram, fragShader);
+                gl.linkProgram(shaderProgram);
+
+                console.log(gl.getShaderInfoLog(vertShader));
+                console.log(gl.getShaderInfoLog(fragShader));
+
+
+                var clearScreen= function()
+                {
+                    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                    gl.clear(gl.COLOR_BUFFER_BIT);
+                };
+
+                canvas.onmousedown = function (ev)
+                {
+                    if(gameRunning)
+                    {
+                        stopGame();
+                    }
+                    else
+                    {
+                        startGame();
+                    }
+                };
+
+                canvas.onkeydown = function (e)
+                {
+                    var code= e.key;
+                    switch(code)
+                    {
+                        case 'ArrowLeft': // left
+                            paddleRightWay=false;
+                            break;
+                        case 'ArrowRight':// right
+                            paddleRightWay=true;
+                            break;
+                        case 'A':
+                        case 'a': // left2
+                            paddle2RightWay=false;
+                            break;
+                        case 'D':
+                        case 'd':// right2
+                            paddle2RightWay=true;
+                            break;
+                        case ' ': // space
+                            if( gameRunning)
+                            {
+                                stopGame();
+                            }
+                            else
+                            {
+                                startGame();
+                            }
+                            break;
+                    }
+                };
+
+                var run = function()
+                {
+                    movePaddle();
+                    movePaddle2();
+                    moveBall();
+                    createFigure();
+                    updateVertices();
+                    updateFigures();
+                    clearScreen();
+                    draw();
+
+                    if(gameRunning)
+                        requestAnimationFrame(run);
+                };
+
+                function updateVertices()
+                {
+                    paddleVertices[0]=paddleCenterX-0.2;
+                    paddleVertices[2]=paddleCenterX+0.2;
+                    paddleVertices[1]=paddleCenterY-0.01;
+                    paddleVertices[5]=paddleCenterY+0.02;
+                    paddleVertices[6]=paddleVertices[0];
+                    paddleVertices[4]=paddleVertices[2];
+                    paddleVertices[7]=paddleVertices[5];
+                    paddleVertices[3]=paddleVertices[1];
+
+                    paddle2Vertices[0]=paddle2CenterX-0.2;
+                    paddle2Vertices[2]=paddle2CenterX+0.2;
+                    paddle2Vertices[1]=paddle2CenterY-0.01;
+                    paddle2Vertices[5]=paddle2CenterY+0.02;
+                    paddle2Vertices[6]=paddle2Vertices[0];
+                    paddle2Vertices[4]=paddle2Vertices[2];
+                    paddle2Vertices[7]=paddle2Vertices[5];
+                    paddle2Vertices[3]=paddle2Vertices[1];
+
+                    ballVertices[0]=ballCenterX-ballSize;
+                    ballVertices[2]=ballCenterX+ballSize;
+                    ballVertices[1]=ballCenterY-ballSize;
+                    ballVertices[5]=ballCenterY+ballSize;
+                    ballVertices[6]=ballVertices[0];
+                    ballVertices[4]=ballVertices[2];
+                    ballVertices[7]=ballVertices[5];
+                    ballVertices[3]=ballVertices[1];
+                }
+
+                function updateFigures()
+                {
+                    var i;
+                    var newVertices= [];
+                    var newColors= [];
+                    var newSizes= [];
+                    for(i=0; i<fCenters.length/3; i++)
+                    {
+                        if(fCenters[i]<1.0)
+                        {
+                            newVertices.push(fCenters[3*i]);
+                            newVertices.push(fCenters[3*i+1]);
+                            newVertices.push(fCenters[3*i+2]);
+                            newColors.push(fColors[3*i]);
+                            newColors.push(fColors[3*i+1]);
+                            newColors.push(fColors[3*i+2]);
+                            newColors.push(fColors[3*i+3]);
+                            newColors.push(fColors[3*i+4]);
+                            newColors.push(fColors[3*i+5]);
+                            newColors.push(fColors[3*i+6]);
+                            newColors.push(fColors[3*i+7]);
+                            newColors.push(fColors[3*i+8]);
+                            newColors.push(fColors[3*i+9]);
+                            newColors.push(fColors[3*i+10]);
+                            newColors.push(fColors[3*i+11]);
+                            newColors.push(fColors[3*i+12]);
+                            newColors.push(fColors[3*i+13]);
+                            newColors.push(fColors[3*i+14]);
+                            newColors.push(fColors[3*i+15]);
+                            newSizes.push(fSizes[i]);
+                        }
+                    }
+
+                    fCenters=newVertices;
+                    fColors=newColors;
+                    fSizes=newSizes;
+
+                    fVertices= new Float32Array(fCenters.length*4);
+                    for(i=0; i<fCenters.length; i+=3)
+                    {
+
+                        fCenters[i]=fCenters[i]+0.02;
+                        var x= fCenters[i];
+                        var y= fCenters[i+1];
+                        var z= fCenters[i+2];
+                        var size= fSizes[i/3];
+                        fVertices[4*i]=x-size;
+                        fVertices[4*i+1]=y-size;
+                        fVertices[4*i+2]=z;
+                        fVertices[4*i+3]=x-size;
+                        fVertices[4*i+4]=y+size;
+                        fVertices[4*i+5]=z;
+                        fVertices[4*i+6]=x+size;
+                        fVertices[4*i+7]=y+size;
+                        fVertices[4*i+8]=z;
+                        fVertices[4*i+9]=x+size;
+                        fVertices[4*i+10]=y-size;
+                        fVertices[4*i+11]=z;
+
+
+                        paddleVertices[0]=paddleCenterX-0.2;
+                        paddleVertices[2]=paddleCenterX+0.2;
+                        paddleVertices[1]=paddleCenterY-0.01;
+                        paddleVertices[5]=paddleCenterY+0.02;
+                        paddleVertices[6]=paddleVertices[0];
+                        paddleVertices[4]=paddleVertices[2];
+                        paddleVertices[7]=paddleVertices[5];
+                        paddleVertices[3]=paddleVertices[1];
+                    }
+                }
+
+                function draw()
+                {
+                    gl.useProgram(shaderProgram);
+
+                    gl.enable(gl.DEPTH_TEST);
+                    gl.depthFunc(gl.LEQUAL);
+
+                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+                    var pSize=gl.getAttribLocation(shaderProgram, 'pointSize');
+
+                    var modelMatrix = new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]);
+                    var projectionMatrix = new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]);
+
+                    var shaderProjectionMatrixUniform = gl.getUniformLocation(shaderProgram, "projectionMatrix");
+                    var shaderModelMatrixUniform = gl.getUniformLocation(shaderProgram, "modelMatrix");
+                    gl.uniformMatrix4fv(shaderProjectionMatrixUniform, false, projectionMatrix);
+                    gl.uniformMatrix4fv(shaderModelMatrixUniform, false, modelMatrix);
+
+                    var vertexPos=  gl.getAttribLocation(shaderProgram, "vertexPos");
+
+                    var vColor=  gl.getAttribLocation(shaderProgram, "vColor");
+
+                    var vertexBuffer= gl.createBuffer();
+                    var colorBuffer= gl.createBuffer();
+
+
+                    // rysowanie paletki 1
+
+                    gl.vertexAttrib1f(pSize, pointSize);
+
+                    gl.enableVertexAttribArray(vertexPos);
+                    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, paddleVertices, gl.STATIC_DRAW);
+                    gl.vertexAttribPointer(vertexPos, 2, gl.FLOAT, false, 0, 0);
+
+                    gl.enableVertexAttribArray(vColor);
+                    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, paddleColor, gl.STATIC_DRAW);
+                    gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
+
+                    gl.drawArrays(gl.TRIANGLE_FAN, 0, paddleVertices.length/2);
+
+                    // rysowanie paletki 2
+
+                    gl.vertexAttrib1f(pSize, pointSize);
+
+                    gl.enableVertexAttribArray(vertexPos);
+                    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, paddle2Vertices, gl.STATIC_DRAW);
+                    gl.vertexAttribPointer(vertexPos, 2, gl.FLOAT, false, 0, 0);
+
+                    gl.enableVertexAttribArray(vColor);
+                    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, paddle2Color, gl.STATIC_DRAW);
+                    gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
+
+                    gl.drawArrays(gl.TRIANGLE_FAN, 0, paddle2Vertices.length/2);
+
+                    // rysowanie piłki
+
+                    gl.vertexAttrib1f(pSize, pointSize);
+
+                    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, ballVertices, gl.STATIC_DRAW);
+                    gl.vertexAttribPointer(vertexPos, 2, gl.FLOAT, false, 0, 0);
+
+                    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, ballColor, gl.STATIC_DRAW);
+                    gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
+
+                    gl.drawArrays(gl.TRIANGLE_FAN, 0, ballVertices.length/2);
+
+                    // rysowanie tła
+
+                    gl.vertexAttrib1f(pSize, pointSize);
+
+                    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, fVertices, gl.STATIC_DRAW);
+                    gl.vertexAttribPointer(vertexPos, 3, gl.FLOAT, false, 0, 0);
+
+                    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(fColors), gl.STATIC_DRAW);
+                    gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
+
+                    gl.drawArrays(gl.LINE_STRIP, 0, fVertices.length/3);
+
+
+
+                    gl.deleteBuffer(vertexBuffer);
+                    gl.deleteBuffer(colorBuffer)
+                }
+
+                function change_canv()
+                {
+                    var wiVal=document.getElementById("wi").value;
+
+                    canvas.setAttribute("height", wiVal);
+                    canvas.setAttribute("width", wiVal);
+                    clearScreen();
+                    gl.viewport(0,0,canvas.width, canvas.height);
+                    draw();
+                    return false;
+                }
+
+                clearScreen();
+                draw();
+
+            </script>
+
+        </div>
+    </article>
+</div>
+</body>
+</html>

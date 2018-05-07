@@ -34,9 +34,10 @@ header {
 }
 
 .topTitle {
-    font-size: 2.3em;
+    margin: 0.2em;
+    font-size: 4em;
     color: #EEEEEE;
-    font-style: normal;
+    font-style: oblique;
     text-decoration: none;
     transition: color 0.5s, color 0.5s;
 }
@@ -46,12 +47,14 @@ header {
 }
 
 .topSubtitle {
+    margin: 0.2em;
     color: #f3cd9f;
     font-weight: 700;
-    font-size: 2.2em;
+    font-size: 2.3em;
 }
 
 .topContentTitle {
+    margin: 0.2em;
     text-align: center;
 }
 
@@ -164,16 +167,17 @@ header {
 .menu-h li
 {
     float:left;
-    margin: 0 0.25em 0 0.25em;
-}
-
-.menu-h li * {
+    margin: 0.1em 0.25em 0.1em 0.25em;
     text-align: center;
     font-family: Calibri, sans-serif;
 }
 
+
+
 .menu-h a
 {
+    text-align: center;
+    font-family: Calibri, sans-serif;
     display: block;
     background: #0b216a;
     color: #e0f6d5;
