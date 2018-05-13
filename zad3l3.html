@@ -1,0 +1,509 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content=" Robert Gawlik">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Zad2 L2</title>
+    <meta name="description" content="Robert Gawlik: z2l2">
+    <style>
+        canvas {
+            border: 5px double #505050;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <article id="window">
+        <header>
+            <h1 class="topTitleHeader">Robert Gawlik</h1>
+            <h3 class="topContentTitle">Zad2 L2</h3>
+        </header>
+        <div class="content">
+
+            <form id="firstForm" action="javascript:" onsubmit="change_canv()">
+                Change canvas width: <input id="wi" type="number" value="640" title="Width"/>
+                <input type="submit" value="DO">
+            </form>
+
+            <canvas id="canv" width="640" height="640" tabindex='1'>
+                Canvas is not supported in your browser
+            </canvas>
+
+            <script>
+
+                let imageCount=3;
+                let currPeriod= 1;
+                let lastTime=0;
+
+                let canvas = document.getElementById("canv");
+                let gl = canvas.getContext("experimental-webgl");
+                gl.viewport(0,0,canvas.width, canvas.height);
+                gl.lineWidth= 1;
+
+                let paddleText=gl.createTexture();
+                let ballText=gl.createTexture();
+                let fishText=gl.createTexture();
+
+                var pImage= new Image();
+                var bImage= new Image();
+                var fImage= new Image();
+
+                pImage.onload= function (ev) { imageCount--; if(imageCount===0) {draw();} };
+                bImage.onload= function (ev) { imageCount--; if(imageCount===0) {draw();} };
+                fImage.onload= function (ev) { imageCount--; if(imageCount===0) {draw();} };
+
+                pImage.src='paddle.png';
+                bImage.src='ball.png';
+                fImage.src='fish.png';
+
+                let textureCord= new Float32Array([0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0]);
+
+                let pointSize = 8.0;
+                let gameRunning= false;
+
+                let paddle2CenterX= 0.0;
+                let paddle2CenterY= 0.8;
+                let paddleCenterX= 0.0;
+                let paddleCenterY= -0.8;
+                let ballCenterX= 0.0;
+                let ballCenterY= 0.0;
+
+                let ballSpeed= 0.024;
+                let paddleSpeed= 0.015;
+                let ballAngle= 50;
+                let ballSize= 0.01;
+                let paddleRightWay= true;
+                let paddle2RightWay= true;
+
+                let paddleVertices= new Float32Array([ 0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0 ]);
+                let paddle2Vertices= new Float32Array([ 0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0 ]);
+                let ballVertices= new Float32Array([ 0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0 ]);
+
+                let figures= [];
+                let figuresSpeed= 0.013;
+
+                updateVertices();
+
+                function createFigure()
+                {
+                    if(Math.random()>0.06)
+                        return;
+
+                    let y= -1.0+Math.random()*2;
+                    let x= -1.0;
+                    let z= 0.2+Math.random()*0.7;
+                    let size= Math.random()*0.05+0.05;
+
+                    figures.push({x:x, y:y, z:z, size:size, vert: new Float32Array(12)});
+                }
+
+                function moveBall()
+                {
+                    let radian= Math.PI * ballAngle / 180.0;
+                    let xT= Math.cos(radian)*ballSpeed*currPeriod;
+                    let yT= Math.sin(radian)*ballSpeed*currPeriod;
+                    ballCenterX= ballCenterX+xT;
+                    ballCenterY= ballCenterY+yT;
+
+                    if(ballCenterX>1.0-ballSize || ballCenterX< -1.0+ballSize) // odbicie o pionową ścianę
+                    {
+                        ballAngle=(540-ballAngle)%360;
+                    }
+
+                    if(ballCenterY>1.0-ballSize || ballCenterY<-1.0+ballSize)
+                    {
+                        return endGame();
+                    }
+
+                    if( ballCenterY<paddleCenterY+0.025 && paddleCenterY<ballCenterY
+                        && paddleCenterX-0.21<ballCenterX && ballCenterX<paddleCenterX+0.21
+                        && ballAngle>=180 ) // odbicie od paletki 1
+                    {
+                        if( (paddleRightWay && ballAngle>=270) || (!paddleRightWay && ballAngle<270) )
+                            ballAngle=Math.min(360-ballAngle+Math.random()*15, 143);
+                        else
+                            ballAngle=Math.max(360-ballAngle-Math.random()*15, 37);
+                    }
+                    else if( ballCenterY>paddle2CenterY-0.025 && paddle2CenterY>ballCenterY
+                        && paddle2CenterX-0.21<ballCenterX && ballCenterX<paddle2CenterX+0.21
+                        && ballAngle<=180 ) // odbicie od paletki 2
+                    {
+                        if( (paddle2RightWay && ballAngle>=90) || (!paddle2RightWay && ballAngle<90) )
+                            ballAngle=Math.max(360-ballAngle-Math.random()*15, 217);
+                        else
+                            ballAngle=Math.min(360-ballAngle+Math.random()*15, 323);
+                    }
+                }
+
+                function movePaddle()
+                {
+                    if(paddleRightWay)
+                    {
+                        paddleCenterX=Math.min(paddleCenterX+paddleSpeed*currPeriod, 1.0-0.2);
+                    }
+                    else
+                    {
+                        paddleCenterX=Math.max(paddleCenterX-paddleSpeed*currPeriod, -1.0+0.2);
+                    }
+                }
+
+                function movePaddle2()
+                {
+                    if(paddle2RightWay)
+                    {
+                        paddle2CenterX=Math.min(paddle2CenterX+paddleSpeed*currPeriod, 1.0-0.2);
+                    }
+                    else
+                    {
+                        paddle2CenterX=Math.max(paddle2CenterX-paddleSpeed*currPeriod, -1.0+0.2);
+                    }
+                }
+
+                function endGame()
+                {
+                    paddleCenterX= 0.0;
+                    paddleCenterY= -0.8;
+                    paddle2CenterX= 0.0;
+                    paddle2CenterY= 0.8;
+                    ballCenterX= 0.0;
+                    ballCenterY= 0.0;
+                }
+
+                function startGame()
+                {
+                    gameRunning= true;
+                    requestAnimationFrame(run);
+                }
+
+                function stopGame()
+                {
+                    gameRunning= false;
+                }
+
+                let vertexShaderSrc =
+                    "attribute float pointSize; \n" +
+                    "attribute vec2 tCord; \n" +
+                    "attribute vec3 vertexPos; \n" +
+                    "varying mediump vec2 texCord; \n" +
+                    "uniform mat4 modelMatrix; \n" +
+                    "uniform mat4 projectionMatrix; \n" +
+                    " void main(void) \n " +
+                    " { gl_Position= projectionMatrix * (modelMatrix * vec4(vertexPos,1.0)); \n" +
+                    " gl_PointSize= pointSize; texCord= tCord; } \n";
+
+                let fragmShaderSrc =
+                    "uniform sampler2D sampler; \n" +
+                    "varying mediump  vec2 texCord; \n" +
+                    "void main(void) \n" +
+                    "{ gl_FragColor= texture2D(sampler, texCord); } \n";
+
+
+                let vertShader = gl.createShader(gl.VERTEX_SHADER);
+                gl.shaderSource(vertShader, vertexShaderSrc);
+                gl.compileShader(vertShader);
+
+                let fragShader = gl.createShader(gl.FRAGMENT_SHADER);
+                gl.shaderSource(fragShader, fragmShaderSrc);
+                gl.compileShader(fragShader);
+
+
+                let shaderProgram = gl.createProgram();
+                gl.attachShader(shaderProgram, vertShader);
+                gl.attachShader(shaderProgram, fragShader);
+                gl.linkProgram(shaderProgram);
+
+                console.log(gl.getShaderInfoLog(vertShader));
+                console.log(gl.getShaderInfoLog(fragShader));
+
+
+                let clearScreen= function()
+                {
+                    gl.clearColor(0.04, 0.04, 0.35, 1.0);
+                    gl.clear(gl.COLOR_BUFFER_BIT);
+                };
+
+                canvas.onmousedown = function (ev)
+                {
+                    if(gameRunning)
+                    {
+                        stopGame();
+                    }
+                    else
+                    {
+                        startGame();
+                    }
+                };
+
+                canvas.onkeydown = function (e)
+                {
+                    let code= e.key;
+                    switch(code)
+                    {
+                        case 'ArrowLeft': // left
+                            paddleRightWay=false;
+                            break;
+                        case 'ArrowRight':// right
+                            paddleRightWay=true;
+                            break;
+                        case 'A':
+                        case 'a': // left2
+                            paddle2RightWay=false;
+                            break;
+                        case 'D':
+                        case 'd':// right2
+                            paddle2RightWay=true;
+                            break;
+                        case ' ': // space
+                            if( gameRunning)
+                            {
+                                stopGame();
+                            }
+                            else
+                            {
+                                startGame();
+                            }
+                            break;
+                    }
+                };
+
+                function updateTime()
+                {
+                    if(lastTime===0)
+                    {
+                        currPeriod=1;
+                    }
+                    else
+                    {
+                        currPeriod=(Date.now()-lastTime)*0.06;
+                    }
+                    lastTime=Date.now();
+                }
+
+                let run = function()
+                {
+                    updateTime();
+                    movePaddle();
+                    movePaddle2();
+                    moveBall();
+                    createFigure();
+                    updateVertices();
+                    updateFigures();
+                    clearScreen();
+                    draw();
+
+                    if(gameRunning)
+                        requestAnimationFrame(run);
+                };
+
+                function updateVertices()
+                {
+                    paddleVertices[0]=paddleCenterX-0.2;
+                    paddleVertices[2]=paddleCenterX+0.2;
+                    paddleVertices[1]=paddleCenterY-0.01;
+                    paddleVertices[5]=paddleCenterY+0.02;
+                    paddleVertices[6]=paddleVertices[0];
+                    paddleVertices[4]=paddleVertices[2];
+                    paddleVertices[7]=paddleVertices[5];
+                    paddleVertices[3]=paddleVertices[1];
+
+                    paddle2Vertices[0]=paddle2CenterX-0.2;
+                    paddle2Vertices[2]=paddle2CenterX+0.2;
+                    paddle2Vertices[1]=paddle2CenterY-0.01;
+                    paddle2Vertices[5]=paddle2CenterY+0.02;
+                    paddle2Vertices[6]=paddle2Vertices[0];
+                    paddle2Vertices[4]=paddle2Vertices[2];
+                    paddle2Vertices[7]=paddle2Vertices[5];
+                    paddle2Vertices[3]=paddle2Vertices[1];
+
+                    ballVertices[0]=ballCenterX-ballSize;
+                    ballVertices[2]=ballCenterX+ballSize;
+                    ballVertices[1]=ballCenterY-ballSize;
+                    ballVertices[5]=ballCenterY+ballSize;
+                    ballVertices[6]=ballVertices[0];
+                    ballVertices[4]=ballVertices[2];
+                    ballVertices[7]=ballVertices[5];
+                    ballVertices[3]=ballVertices[1];
+                }
+
+                function updateFigures()
+                {
+                    let i;
+                    for(i=figures.length-1; i>=0; i--)
+                    {
+                        if(figures[i].x>0.95+figures[i].size)
+                        {
+                            figures.splice(i, 1);
+                        }
+                    }
+
+                    for(i=0; i<figures.length; i++)
+                    {
+
+                        figures[i].x=figures[i].x+figuresSpeed*currPeriod;
+                        let x= figures[i].x;
+                        let y= figures[i].y;
+                        let z= figures[i].z;
+                        let size= figures[i].size;
+
+                        figures[i].vert[0]=x-size;
+                        figures[i].vert[1]=y-size;
+                        figures[i].vert[2]=z;
+                        figures[i].vert[3]=x+size;
+                        figures[i].vert[4]=y-size;
+                        figures[i].vert[5]=z;
+                        figures[i].vert[6]=x+size;
+                        figures[i].vert[7]=y+size;
+                        figures[i].vert[8]=z;
+                        figures[i].vert[9]=x-size;
+                        figures[i].vert[10]=y+size;
+                        figures[i].vert[11]=z;
+
+                        paddleVertices[0]=paddleCenterX-0.2;
+                        paddleVertices[2]=paddleCenterX+0.2;
+                        paddleVertices[1]=paddleCenterY-0.01;
+                        paddleVertices[5]=paddleCenterY+0.02;
+                        paddleVertices[6]=paddleVertices[0];
+                        paddleVertices[4]=paddleVertices[2];
+                        paddleVertices[7]=paddleVertices[5];
+                        paddleVertices[3]=paddleVertices[1];
+                    }
+                }
+
+                function draw()
+                {
+                    gl.useProgram(shaderProgram);
+
+                    gl.enable(gl.DEPTH_TEST);
+                    gl.depthFunc(gl.LEQUAL);
+
+                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+                    //gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+
+                    let pSize=gl.getAttribLocation(shaderProgram, 'pointSize');
+
+                    let modelMatrix = new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]);
+                    let projectionMatrix = new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]);
+
+                    let shaderProjectionMatrixUniform = gl.getUniformLocation(shaderProgram, "projectionMatrix");
+                    let shaderModelMatrixUniform = gl.getUniformLocation(shaderProgram, "modelMatrix");
+                    gl.uniformMatrix4fv(shaderProjectionMatrixUniform, false, projectionMatrix);
+                    gl.uniformMatrix4fv(shaderModelMatrixUniform, false, modelMatrix);
+
+                    let vertexPos=  gl.getAttribLocation(shaderProgram, "vertexPos");
+
+                    let samplerUniform = gl.getUniformLocation(shaderProgram, "sampler");
+
+                    let tCord=  gl.getAttribLocation(shaderProgram, "tCord");
+
+                    let vertexBuffer= gl.createBuffer();
+                    let colorBuffer= gl.createBuffer();
+                    let textBuffer= gl.createBuffer();
+
+                    gl.enableVertexAttribArray(tCord);
+                    gl.bindBuffer(gl.ARRAY_BUFFER, textBuffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, textureCord, gl.STATIC_DRAW);
+                    gl.vertexAttribPointer(tCord, 2, gl.FLOAT, false, 0, 0);
+
+                    // rysowanie paletki 1
+
+                    gl.activeTexture(gl.TEXTURE0);
+                    gl.bindTexture(gl.TEXTURE_2D, paddleText);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, pImage);
+                    gl.uniform1i(samplerUniform, 0);
+
+                    gl.vertexAttrib1f(pSize, pointSize);
+
+                    gl.enableVertexAttribArray(vertexPos);
+                    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, paddleVertices, gl.STATIC_DRAW);
+                    gl.vertexAttribPointer(vertexPos, 2, gl.FLOAT, false, 0, 0);
+
+                    gl.drawArrays(gl.TRIANGLE_FAN, 0, paddleVertices.length/2);
+
+                    // rysowanie paletki 2
+
+                    gl.vertexAttrib1f(pSize, pointSize);
+
+                    gl.enableVertexAttribArray(vertexPos);
+                    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, paddle2Vertices, gl.STATIC_DRAW);
+                    gl.vertexAttribPointer(vertexPos, 2, gl.FLOAT, false, 0, 0);
+
+                    gl.drawArrays(gl.TRIANGLE_FAN, 0, paddle2Vertices.length/2);
+
+                    // rysowanie piłki
+
+                    gl.activeTexture(gl.TEXTURE1);
+                    gl.bindTexture(gl.TEXTURE_2D, ballText);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, bImage);
+                    gl.uniform1i(samplerUniform, 1);
+
+                    gl.vertexAttrib1f(pSize, pointSize);
+
+                    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+                    gl.bufferData(gl.ARRAY_BUFFER, ballVertices, gl.STATIC_DRAW);
+                    gl.vertexAttribPointer(vertexPos, 2, gl.FLOAT, false, 0, 0);
+
+                    gl.drawArrays(gl.TRIANGLE_FAN, 0, ballVertices.length/2);
+
+                    // rysowanie tła
+
+                    gl.activeTexture(gl.TEXTURE2);
+                    gl.bindTexture(gl.TEXTURE_2D, fishText);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, fImage);
+                    gl.uniform1i(samplerUniform, 2);
+
+                    gl.vertexAttrib1f(pSize, pointSize);
+                    gl.vertexAttribPointer(vertexPos, 3, gl.FLOAT, false, 0, 0);
+
+
+                    let i;
+                    for(i=0; i<figures.length; i++)
+                    {
+                        gl.bufferData(gl.ARRAY_BUFFER, figures[i].vert, gl.STATIC_DRAW);
+                        gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
+                    }
+
+
+
+                    gl.deleteBuffer(vertexBuffer);
+                    gl.deleteBuffer(colorBuffer);
+                    gl.deleteBuffer(textBuffer);
+                }
+
+                function change_canv()
+                {
+                    let wiVal=document.getElementById("wi").value;
+
+                    canvas.setAttribute("height", wiVal);
+                    canvas.setAttribute("width", wiVal);
+                    clearScreen();
+                    gl.viewport(0,0,canvas.width, canvas.height);
+                    draw();
+                    return false;
+                }
+
+                clearScreen();
+
+            </script>
+
+        </div>
+    </article>
+</div>
+</body>
+</html>
